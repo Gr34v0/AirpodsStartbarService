@@ -41,11 +41,19 @@
             this.caseLabel = new System.Windows.Forms.Label();
             this.rightIndicator = new System.Windows.Forms.Label();
             this.leftIndicator = new System.Windows.Forms.Label();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripAbout = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripFile = new System.Windows.Forms.ToolStripDropDownButton();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backToMainViewButton = new System.Windows.Forms.Button();
             this.chargingImageCase = new System.Windows.Forms.PictureBox();
             this.chargingImageLeft = new System.Windows.Forms.PictureBox();
             this.chargingImageRight = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.aboutLabel = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).BeginInit();
@@ -141,7 +149,7 @@
             this.rightIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rightIndicator.Location = new System.Drawing.Point(127, 107);
             this.rightIndicator.Name = "rightIndicator";
-            this.rightIndicator.Size = new System.Drawing.Size(55, 35);
+            this.rightIndicator.Size = new System.Drawing.Size(55, 21);
             this.rightIndicator.TabIndex = 6;
             this.rightIndicator.Text = "Right";
             // 
@@ -149,11 +157,67 @@
             // 
             this.leftIndicator.BackColor = System.Drawing.Color.White;
             this.leftIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.leftIndicator.Location = new System.Drawing.Point(257, 107);
+            this.leftIndicator.Location = new System.Drawing.Point(248, 107);
             this.leftIndicator.Name = "leftIndicator";
-            this.leftIndicator.Size = new System.Drawing.Size(55, 35);
+            this.leftIndicator.Size = new System.Drawing.Size(55, 21);
             this.leftIndicator.TabIndex = 7;
             this.leftIndicator.Text = "Left";
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripAbout,
+            this.toolStripFile});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(798, 25);
+            this.toolStrip1.TabIndex = 11;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripAbout
+            // 
+            this.toolStripAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripAbout.Name = "toolStripAbout";
+            this.toolStripAbout.Size = new System.Drawing.Size(40, 22);
+            this.toolStripAbout.Text = "About";
+            this.toolStripAbout.Click += new System.EventHandler(this.toolStripAbout_Click);
+            // 
+            // toolStripFile
+            // 
+            this.toolStripFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testToolStripMenuItem,
+            this.test2ToolStripMenuItem});
+            this.toolStripFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripFile.Image")));
+            this.toolStripFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripFile.Name = "toolStripFile";
+            this.toolStripFile.Size = new System.Drawing.Size(38, 22);
+            this.toolStripFile.Text = "File";
+            this.toolStripFile.ToolTipText = "toolStripFile";
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.testToolStripMenuItem.Text = "Test";
+            // 
+            // test2ToolStripMenuItem
+            // 
+            this.test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
+            this.test2ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.test2ToolStripMenuItem.Text = "Test2";
+            // 
+            // backToMainViewButton
+            // 
+            this.backToMainViewButton.BackColor = System.Drawing.Color.White;
+            this.backToMainViewButton.Location = new System.Drawing.Point(0, 28);
+            this.backToMainViewButton.Name = "backToMainViewButton";
+            this.backToMainViewButton.Size = new System.Drawing.Size(64, 51);
+            this.backToMainViewButton.TabIndex = 12;
+            this.backToMainViewButton.Text = "Back";
+            this.backToMainViewButton.UseVisualStyleBackColor = false;
+            this.backToMainViewButton.Visible = false;
+            this.backToMainViewButton.Click += new System.EventHandler(this.backToMainViewButton_Click);
             // 
             // chargingImageCase
             // 
@@ -195,18 +259,31 @@
             // 
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox1.Image = global::AirpodsStartbarService.Properties.Resources.airpods_image_small;
-            this.pictureBox1.Location = new System.Drawing.Point(-3, -30);
+            this.pictureBox1.Location = new System.Drawing.Point(-8, -35);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(806, 533);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // aboutLabel
+            // 
+            this.aboutLabel.AutoSize = true;
+            this.aboutLabel.Location = new System.Drawing.Point(339, 66);
+            this.aboutLabel.Name = "aboutLabel";
+            this.aboutLabel.Size = new System.Drawing.Size(113, 13);
+            this.aboutLabel.TabIndex = 13;
+            this.aboutLabel.Text = "ABOUT TEST VALUE";
+            this.aboutLabel.Visible = false;
+            // 
             // serviceMainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 492);
+            this.Controls.Add(this.aboutLabel);
+            this.Controls.Add(this.backToMainViewButton);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.chargingImageCase);
             this.Controls.Add(this.chargingImageLeft);
             this.Controls.Add(this.chargingImageRight);
@@ -221,11 +298,14 @@
             this.Name = "serviceMainWindow";
             this.Text = "Airpods Service";
             this.contextMenuStrip1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -246,5 +326,12 @@
         private System.Windows.Forms.PictureBox chargingImageRight;
         private System.Windows.Forms.PictureBox chargingImageLeft;
         private System.Windows.Forms.PictureBox chargingImageCase;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripLabel toolStripAbout;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripFile;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
+        private System.Windows.Forms.Button backToMainViewButton;
+        private System.Windows.Forms.Label aboutLabel;
     }
 }

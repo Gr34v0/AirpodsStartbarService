@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.ServiceProcess;
+using System.Security.Principal;
 
 namespace AirpodsStartbarService
 {
@@ -224,11 +225,41 @@ namespace AirpodsStartbarService
         {
             Console.WriteLine("Restarting Service");
             ServiceController service = new ServiceController(serviceName);
-            service.Stop();
-            service.WaitForStatus(ServiceControllerStatus.Stopped);
+            if(service.Status == ServiceControllerStatus.Running)
+            {
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
             service.Start();
             service.WaitForStatus(ServiceControllerStatus.Running);
         }
 
+        private static bool IsAdmin()
+        {
+            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void toolStripFile_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripAbout_Click(object sender, EventArgs e)
+        {
+            backToMainViewButton.Show();
+            //this.Hide();
+            //AboutForm aboutForm = new AboutForm();
+            //aboutForm.Show();
+            pictureBox1.Hide();
+            leftPodLabel.Hide();
+            rightPodLabel.Hide();
+        }
+
+        private void backToMainViewButton_Click(object sender, EventArgs e)
+        {
+            pictureBox1.Show();
+            leftPodLabel.Show();
+            rightPodLabel.Show();
+        }
     }
 }
