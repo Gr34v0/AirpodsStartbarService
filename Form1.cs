@@ -40,6 +40,8 @@ namespace AirpodsStartbarService
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
 #endif
+            aboutLabel.Text = AboutText();
+
             batteryService = new ServiceConsumer(serviceName);
 
             restartService();
@@ -331,6 +333,17 @@ namespace AirpodsStartbarService
         private void updatingInfoToast_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private string AboutText()
+        {
+            return
+                "I was extremely annoyed with not being able to simply view the battery life on my AirPods when I was using them with my Windows laptop.\r\n" +
+                "I don't have any Apple devices, but I love using my AirPods for meetings and music from my laptop.\r\n" +
+                "I have now solved this issue with help from ohandean's Airpods Windows Service, and made it open for anyone to use.\r\n" +
+                "Hopefully you find this useful - Holly"
+                ;
+            
         }
     }
 }
