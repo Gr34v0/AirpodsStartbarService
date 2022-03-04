@@ -27,8 +27,8 @@ namespace AirpodsStartbarService
             model = "",
             rssi = 0
         };
-        private Timer timer;
-        private Timer serviceTimer;
+        private Timer updateTimer;
+        private Timer restartServiceTimer;
         string serviceName = "airpods-service";
 
         public serviceMainWindow()
@@ -44,15 +44,15 @@ namespace AirpodsStartbarService
 
             restartService();
 
-            timer = new Timer();
-            timer.Interval = 10000;
-            timer.Tick += batteryUpdateConsume;
-            timer.Start();
+            updateTimer = new Timer();
+            updateTimer.Interval = 30000;
+            updateTimer.Tick += batteryUpdateConsume;
+            updateTimer.Start();
 
-            serviceTimer = new Timer();
-            serviceTimer.Interval = 300000;
-            serviceTimer.Tick += restartServiceEvent;
-            serviceTimer.Start();
+            restartServiceTimer = new Timer();
+            restartServiceTimer.Interval = 300000;
+            restartServiceTimer.Tick += restartServiceEvent;
+            restartServiceTimer.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -95,8 +95,8 @@ namespace AirpodsStartbarService
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
-            timer.Stop();
-            serviceTimer.Stop();
+            updateTimer.Stop();
+            restartServiceTimer.Stop();
             Application.Exit();
         }
 
@@ -111,7 +111,7 @@ namespace AirpodsStartbarService
             batteryUpdate(false);
         }
 
-        private void batteryUpdate(bool manual = true)
+        private async void batteryUpdate(bool manual = true)
         {
             if (manual)
             {
@@ -230,7 +230,7 @@ namespace AirpodsStartbarService
                             updatingInfoToast.Text = "Battery Info Updated";
                             Timer toastTimer = new Timer();
                             toastTimer.Interval = 5000;
-                            toastTimer.Tick += (sender, args) => { updatingInfoToast.Visible = false; toastTimer.Stop(); };
+                            toastTimer.Tick += (sender, args) => { updatingInfoToast.Visible = false; toastTimer.Stop(); toastTimer.Dispose(); };
                             toastTimer.Start();
                         }
                         else
@@ -244,6 +244,10 @@ namespace AirpodsStartbarService
                     return;
                 }
             });
+
+            await task;
+            task.Dispose();
+           
         }
 
         private void restartServiceEvent(object sender, EventArgs e)
@@ -251,7 +255,7 @@ namespace AirpodsStartbarService
             restartService();
         }
 
-        private void restartService()
+        private async void restartService()
         {
             Task task = Task.Factory.StartNew(() =>
             {
@@ -271,8 +275,9 @@ namespace AirpodsStartbarService
                 };
                 this.Invoke(inv);
                 return;
-
             });
+            await task;
+            task.Dispose();
         }
 
         private static bool IsAdmin()
