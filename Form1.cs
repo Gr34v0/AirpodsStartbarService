@@ -34,16 +34,19 @@ namespace AirpodsStartbarService
         public serviceMainWindow()
         {
             InitializeComponent();
+#if DEBUG
+
+#else
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
-
+#endif
             batteryService = new ServiceConsumer(serviceName);
 
             restartService();
 
             timer = new Timer();
-            timer.Interval = 2000;
-            timer.Tick += batteryUpdate;
+            timer.Interval = 10000;
+            timer.Tick += batteryUpdateConsume;
             timer.Start();
 
             serviceTimer = new Timer();
@@ -103,116 +106,143 @@ namespace AirpodsStartbarService
             this.ShowInTaskbar = true;
         }
 
-        private void batteryUpdate(object sender, EventArgs e)
+        private void batteryUpdateConsume(object sender, EventArgs e)
         {
+            batteryUpdate(false);
+        }
+
+        private void batteryUpdate(bool manual = true)
+        {
+            if (manual)
+            {
+                updatingInfoToast.Text = "Updating Battery Info...";
+                updatingInfoToast.Visible = true;
+            }
             Task task = Task.Factory.StartNew(() =>
             {
                 string battVal = batteryService.readPipe();
-                battVal = battVal.Replace("case", "case1");
-
-                try
+                if (battVal != null && batteryService != null)
                 {
-                    data = JsonConvert.DeserializeObject<AirpodsData>(battVal);
-                    Console.WriteLine(data.ToString());
-                }
-                catch
-                {
-                    Console.WriteLine(battVal);
-                }
-                
-                string leftVal = "";
-                string rightVal = "";
-                string caseVal = "";
+                    battVal = battVal.Replace("case", "case1");
 
-                string disconText = "-";
-
-                if (data.left == -1)
-                {
-                    leftVal = disconText;
-                }
-                else
-                {
-                    leftVal = data.left.ToString() + "%";
-                }
-
-                if (data.right == -1)
-                {
-                    rightVal = disconText;
-                }
-                else
-                {
-                    rightVal = data.right.ToString() + "%";
-                }
-
-                if (data.case1 == -1)
-                {
-                    caseVal = disconText;
-                }
-                else
-                {
-                    caseVal = data.case1.ToString() + "%";
-                }
-
-                string displayTextLeft = String.Format("Left Ear Bud:     {0}", leftVal);
-                string displayTextRight =String.Format("Right Ear Bud:    {0}", rightVal);
-                string displayTextCase = String.Format("Charging Case:    {0}", caseVal);
-
-                Console.WriteLine(displayTextLeft);
-                Console.WriteLine(displayTextRight);
-                Console.WriteLine(displayTextCase);
-
-                MethodInvoker inv = delegate
-                {
-                    notifyIcon1.Text = "Airpods Battery\r\n" + displayTextLeft + "\r\n" + displayTextRight;
-
-                    this.leftEarBudToolStripMenuItem.Text = displayTextLeft;
-                    this.rightEarBudToolStripMenuItem.Text = displayTextRight;
-                    this.chargingCaseToolStripMenuItem.Text = displayTextCase;
-
-                    this.rightPodLabel.Text = rightVal;
-                    this.leftPodLabel.Text = leftVal;
-                    this.caseLabel.Text = caseVal;
-
-                    this.contextMenuStrip1.Refresh();
-                    this.contextMenuStrip1.Update();
-
-                    this.rightPodLabel.Update();
-                    this.leftPodLabel.Update();
-                    this.caseLabel.Update();
-
-                    if (data.charging_left)
+                    try
                     {
-                        this.chargingImageLeft.Show();
+                        data = JsonConvert.DeserializeObject<AirpodsData>(battVal);
+                        Console.WriteLine(data.ToString());
+                    }
+                    catch
+                    {
+                        Console.WriteLine(battVal);
+                    }
+
+                    string leftVal = "";
+                    string rightVal = "";
+                    string caseVal = "";
+
+                    string disconText = "-";
+
+                    if (data.left == -1)
+                    {
+                        leftVal = disconText;
                     }
                     else
                     {
-                        this.chargingImageLeft.Hide();
+                        leftVal = data.left.ToString() + "%";
                     }
-                    this.chargingImageLeft.Update();
 
-                    if (data.charging_right)
+                    if (data.right == -1)
                     {
-                        this.chargingImageRight.Show();
+                        rightVal = disconText;
                     }
                     else
                     {
-                        this.chargingImageRight.Hide();
+                        rightVal = data.right.ToString() + "%";
                     }
-                    this.chargingImageRight.Update();
 
-                    if (data.charging_case1)
+                    if (data.case1 == -1)
                     {
-                        this.chargingImageCase.Show();
+                        caseVal = disconText;
                     }
                     else
                     {
-                        this.chargingImageCase.Hide();
+                        caseVal = data.case1.ToString() + "%";
                     }
-                    this.chargingImageCase.Update();
 
-                };
-                this.Invoke(inv);
-                return;
+                    string displayTextLeft = String.Format("Left Ear Bud:     {0}", leftVal);
+                    string displayTextRight = String.Format("Right Ear Bud:    {0}", rightVal);
+                    string displayTextCase = String.Format("Charging Case:    {0}", caseVal);
+
+                    Console.WriteLine(displayTextLeft);
+                    Console.WriteLine(displayTextRight);
+                    Console.WriteLine(displayTextCase);
+
+                    MethodInvoker inv = delegate
+                    {
+                        notifyIcon1.Text = "Airpods Battery\r\n" + displayTextLeft + "\r\n" + displayTextRight;
+
+                        this.leftEarBudToolStripMenuItem.Text = displayTextLeft;
+                        this.rightEarBudToolStripMenuItem.Text = displayTextRight;
+                        this.chargingCaseToolStripMenuItem.Text = displayTextCase;
+
+                        this.rightPodLabel.Text = rightVal;
+                        this.leftPodLabel.Text = leftVal;
+                        this.caseLabel.Text = caseVal;
+
+                        this.contextMenuStrip1.Refresh();
+                        this.contextMenuStrip1.Update();
+
+                        this.rightPodLabel.Update();
+                        this.leftPodLabel.Update();
+                        this.caseLabel.Update();
+
+                        if (data.charging_left)
+                        {
+                            this.chargingImageLeft.Show();
+                        }
+                        else
+                        {
+                            this.chargingImageLeft.Hide();
+                        }
+                        this.chargingImageLeft.Update();
+
+                        if (data.charging_right)
+                        {
+                            this.chargingImageRight.Show();
+                        }
+                        else
+                        {
+                            this.chargingImageRight.Hide();
+                        }
+                        this.chargingImageRight.Update();
+
+                        if (data.charging_case1)
+                        {
+                            this.chargingImageCase.Show();
+                        }
+                        else
+                        {
+                            this.chargingImageCase.Hide();
+                        }
+                        this.chargingImageCase.Update();
+
+                        if (manual)
+                        {
+                            updatingInfoToast.Text = "Battery Info Updated";
+                            Timer toastTimer = new Timer();
+                            toastTimer.Interval = 5000;
+                            toastTimer.Tick += (sender, args) => { updatingInfoToast.Visible = false; toastTimer.Stop(); };
+                            toastTimer.Start();
+                        }
+                        else
+                        {
+                            updatingInfoToast.Visible = false;
+                        }
+
+                    };
+
+                    this.Invoke(inv);
+                    return;
+                }
             });
         }
 
@@ -223,15 +253,26 @@ namespace AirpodsStartbarService
 
         private void restartService()
         {
-            Console.WriteLine("Restarting Service");
-            ServiceController service = new ServiceController(serviceName);
-            if(service.Status == ServiceControllerStatus.Running)
+            Task task = Task.Factory.StartNew(() =>
             {
-                service.Stop();
-                service.WaitForStatus(ServiceControllerStatus.Stopped);
-            }
-            service.Start();
-            service.WaitForStatus(ServiceControllerStatus.Running);
+                Console.WriteLine("Restarting Service");
+                ServiceController service = new ServiceController(serviceName);
+                if (service.Status == ServiceControllerStatus.Running)
+                {
+                    service.Stop();
+                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+                service.Start();
+                service.WaitForStatus(ServiceControllerStatus.Running);
+
+                MethodInvoker inv = delegate
+                {
+                    
+                };
+                this.Invoke(inv);
+                return;
+
+            });
         }
 
         private static bool IsAdmin()
@@ -239,27 +280,52 @@ namespace AirpodsStartbarService
             return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        private void toolStripFile_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void toolStripAbout_Click(object sender, EventArgs e)
         {
-            backToMainViewButton.Show();
-            //this.Hide();
-            //AboutForm aboutForm = new AboutForm();
-            //aboutForm.Show();
-            pictureBox1.Hide();
-            leftPodLabel.Hide();
-            rightPodLabel.Hide();
+            updatingInfoToast.BackColor = Color.Transparent;
+            aboutPanel.Show();
         }
 
         private void backToMainViewButton_Click(object sender, EventArgs e)
         {
-            pictureBox1.Show();
-            leftPodLabel.Show();
-            rightPodLabel.Show();
+            updatingInfoToast.BackColor = Color.White;
+            aboutPanel.Hide();
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            restartService();
+        }
+
+        private void githubVisitText_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        private void githubLogo_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        private void githubText_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        private void navigateToGithubLink()
+        {
+            System.Diagnostics.Process.Start("http://github.com/Gr34v0/AirpodsStartbarService");
+        }
+
+
+        private void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            batteryUpdate(true);
+        }
+
+        private void updatingInfoToast_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -36,28 +36,38 @@
             this.rightEarBudToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargingCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.leftPodLabel = new System.Windows.Forms.Label();
-            this.rightPodLabel = new System.Windows.Forms.Label();
-            this.caseLabel = new System.Windows.Forms.Label();
-            this.rightIndicator = new System.Windows.Forms.Label();
+            this.chargingImageRight = new System.Windows.Forms.PictureBox();
+            this.chargingImageLeft = new System.Windows.Forms.PictureBox();
             this.leftIndicator = new System.Windows.Forms.Label();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.chargingImageCase = new System.Windows.Forms.PictureBox();
+            this.rightPodLabel = new System.Windows.Forms.Label();
+            this.rightIndicator = new System.Windows.Forms.Label();
+            this.caseLabel = new System.Windows.Forms.Label();
+            this.aboutPanel = new System.Windows.Forms.Panel();
+            this.githubVisitText = new System.Windows.Forms.Label();
+            this.githubText = new System.Windows.Forms.PictureBox();
+            this.githubLogo = new System.Windows.Forms.PictureBox();
+            this.aboutLabel = new System.Windows.Forms.Label();
+            this.backToMainViewButton = new System.Windows.Forms.Button();
+            this.mainPanel = new System.Windows.Forms.Panel();
+            this.updatingInfoToast = new System.Windows.Forms.Label();
             this.toolStripAbout = new System.Windows.Forms.ToolStripLabel();
             this.toolStripFile = new System.Windows.Forms.ToolStripDropDownButton();
+            this.updateAirpodsDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.test2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backToMainViewButton = new System.Windows.Forms.Button();
-            this.chargingImageCase = new System.Windows.Forms.PictureBox();
-            this.chargingImageLeft = new System.Windows.Forms.PictureBox();
-            this.chargingImageRight = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.aboutLabel = new System.Windows.Forms.Label();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.contextMenuStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).BeginInit();
+            this.aboutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.githubText)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
+            this.mainPanel.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyIcon1
@@ -110,69 +120,199 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox1.Image = global::AirpodsStartbarService.Properties.Resources.airpods_image_small;
+            this.pictureBox1.Location = new System.Drawing.Point(0, -37);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(798, 529);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
             // leftPodLabel
             // 
             this.leftPodLabel.BackColor = System.Drawing.Color.White;
             this.leftPodLabel.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.leftPodLabel.Location = new System.Drawing.Point(257, 338);
+            this.leftPodLabel.Location = new System.Drawing.Point(275, 336);
             this.leftPodLabel.Name = "leftPodLabel";
             this.leftPodLabel.Size = new System.Drawing.Size(55, 28);
             this.leftPodLabel.TabIndex = 3;
             this.leftPodLabel.Text = "-";
             this.leftPodLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // chargingImageRight
+            // 
+            this.chargingImageRight.BackColor = System.Drawing.Color.White;
+            this.chargingImageRight.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
+            this.chargingImageRight.Location = new System.Drawing.Point(173, 336);
+            this.chargingImageRight.Name = "chargingImageRight";
+            this.chargingImageRight.Size = new System.Drawing.Size(35, 28);
+            this.chargingImageRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.chargingImageRight.TabIndex = 8;
+            this.chargingImageRight.TabStop = false;
+            // 
+            // chargingImageLeft
+            // 
+            this.chargingImageLeft.BackColor = System.Drawing.Color.White;
+            this.chargingImageLeft.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
+            this.chargingImageLeft.Location = new System.Drawing.Point(234, 336);
+            this.chargingImageLeft.Name = "chargingImageLeft";
+            this.chargingImageLeft.Size = new System.Drawing.Size(35, 28);
+            this.chargingImageLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.chargingImageLeft.TabIndex = 9;
+            this.chargingImageLeft.TabStop = false;
+            // 
+            // leftIndicator
+            // 
+            this.leftIndicator.BackColor = System.Drawing.Color.White;
+            this.leftIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.leftIndicator.Location = new System.Drawing.Point(259, 105);
+            this.leftIndicator.Name = "leftIndicator";
+            this.leftIndicator.Size = new System.Drawing.Size(55, 21);
+            this.leftIndicator.TabIndex = 7;
+            this.leftIndicator.Text = "Left";
+            // 
+            // chargingImageCase
+            // 
+            this.chargingImageCase.BackColor = System.Drawing.Color.White;
+            this.chargingImageCase.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
+            this.chargingImageCase.Location = new System.Drawing.Point(538, 373);
+            this.chargingImageCase.Name = "chargingImageCase";
+            this.chargingImageCase.Size = new System.Drawing.Size(35, 28);
+            this.chargingImageCase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.chargingImageCase.TabIndex = 10;
+            this.chargingImageCase.TabStop = false;
+            // 
             // rightPodLabel
             // 
             this.rightPodLabel.BackColor = System.Drawing.Color.White;
             this.rightPodLabel.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rightPodLabel.Location = new System.Drawing.Point(127, 338);
+            this.rightPodLabel.Location = new System.Drawing.Point(112, 336);
             this.rightPodLabel.Name = "rightPodLabel";
             this.rightPodLabel.Size = new System.Drawing.Size(55, 28);
             this.rightPodLabel.TabIndex = 4;
             this.rightPodLabel.Text = "-";
             this.rightPodLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // rightIndicator
+            // 
+            this.rightIndicator.BackColor = System.Drawing.Color.White;
+            this.rightIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rightIndicator.Location = new System.Drawing.Point(138, 105);
+            this.rightIndicator.Name = "rightIndicator";
+            this.rightIndicator.Size = new System.Drawing.Size(55, 21);
+            this.rightIndicator.TabIndex = 6;
+            this.rightIndicator.Text = "Right";
+            // 
             // caseLabel
             // 
             this.caseLabel.BackColor = System.Drawing.Color.White;
             this.caseLabel.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.caseLabel.Location = new System.Drawing.Point(523, 406);
+            this.caseLabel.Location = new System.Drawing.Point(525, 404);
             this.caseLabel.Name = "caseLabel";
             this.caseLabel.Size = new System.Drawing.Size(64, 28);
             this.caseLabel.TabIndex = 5;
             this.caseLabel.Text = "-";
             this.caseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // rightIndicator
+            // aboutPanel
             // 
-            this.rightIndicator.BackColor = System.Drawing.Color.White;
-            this.rightIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rightIndicator.Location = new System.Drawing.Point(127, 107);
-            this.rightIndicator.Name = "rightIndicator";
-            this.rightIndicator.Size = new System.Drawing.Size(55, 21);
-            this.rightIndicator.TabIndex = 6;
-            this.rightIndicator.Text = "Right";
+            this.aboutPanel.Controls.Add(this.githubVisitText);
+            this.aboutPanel.Controls.Add(this.githubText);
+            this.aboutPanel.Controls.Add(this.githubLogo);
+            this.aboutPanel.Controls.Add(this.aboutLabel);
+            this.aboutPanel.Controls.Add(this.backToMainViewButton);
+            this.aboutPanel.Location = new System.Drawing.Point(0, 25);
+            this.aboutPanel.Name = "aboutPanel";
+            this.aboutPanel.Size = new System.Drawing.Size(798, 467);
+            this.aboutPanel.TabIndex = 15;
+            this.aboutPanel.Visible = false;
             // 
-            // leftIndicator
+            // githubVisitText
             // 
-            this.leftIndicator.BackColor = System.Drawing.Color.White;
-            this.leftIndicator.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.leftIndicator.Location = new System.Drawing.Point(248, 107);
-            this.leftIndicator.Name = "leftIndicator";
-            this.leftIndicator.Size = new System.Drawing.Size(55, 21);
-            this.leftIndicator.TabIndex = 7;
-            this.leftIndicator.Text = "Left";
+            this.githubVisitText.AutoSize = true;
+            this.githubVisitText.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.githubVisitText.Location = new System.Drawing.Point(503, 142);
+            this.githubVisitText.Name = "githubVisitText";
+            this.githubVisitText.Size = new System.Drawing.Size(184, 24);
+            this.githubVisitText.TabIndex = 16;
+            this.githubVisitText.Text = "Visit the project on";
+            this.githubVisitText.Click += new System.EventHandler(this.githubVisitText_Click);
             // 
-            // toolStrip1
+            // githubText
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripAbout,
-            this.toolStripFile});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(798, 25);
-            this.toolStrip1.TabIndex = 11;
-            this.toolStrip1.Text = "toolStrip1";
+            this.githubText.Image = global::AirpodsStartbarService.Properties.Resources.GitHub_Logo;
+            this.githubText.Location = new System.Drawing.Point(538, 182);
+            this.githubText.Name = "githubText";
+            this.githubText.Size = new System.Drawing.Size(217, 88);
+            this.githubText.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.githubText.TabIndex = 15;
+            this.githubText.TabStop = false;
+            this.githubText.Click += new System.EventHandler(this.githubText_Click);
+            // 
+            // githubLogo
+            // 
+            this.githubLogo.Image = global::AirpodsStartbarService.Properties.Resources.GitHub_Mark_120px_plus;
+            this.githubLogo.Location = new System.Drawing.Point(432, 182);
+            this.githubLogo.Name = "githubLogo";
+            this.githubLogo.Size = new System.Drawing.Size(100, 88);
+            this.githubLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.githubLogo.TabIndex = 14;
+            this.githubLogo.TabStop = false;
+            this.githubLogo.Click += new System.EventHandler(this.githubLogo_Click);
+            // 
+            // aboutLabel
+            // 
+            this.aboutLabel.AutoSize = true;
+            this.aboutLabel.Location = new System.Drawing.Point(64, 104);
+            this.aboutLabel.Name = "aboutLabel";
+            this.aboutLabel.Size = new System.Drawing.Size(113, 13);
+            this.aboutLabel.TabIndex = 13;
+            this.aboutLabel.Text = "ABOUT TEST VALUE";
+            // 
+            // backToMainViewButton
+            // 
+            this.backToMainViewButton.BackColor = System.Drawing.Color.White;
+            this.backToMainViewButton.Location = new System.Drawing.Point(3, 3);
+            this.backToMainViewButton.Name = "backToMainViewButton";
+            this.backToMainViewButton.Size = new System.Drawing.Size(64, 51);
+            this.backToMainViewButton.TabIndex = 12;
+            this.backToMainViewButton.Text = "Back";
+            this.backToMainViewButton.UseVisualStyleBackColor = false;
+            this.backToMainViewButton.Click += new System.EventHandler(this.backToMainViewButton_Click);
+            // 
+            // mainPanel
+            // 
+            this.mainPanel.Controls.Add(this.aboutPanel);
+            this.mainPanel.Controls.Add(this.caseLabel);
+            this.mainPanel.Controls.Add(this.rightIndicator);
+            this.mainPanel.Controls.Add(this.rightPodLabel);
+            this.mainPanel.Controls.Add(this.chargingImageCase);
+            this.mainPanel.Controls.Add(this.leftIndicator);
+            this.mainPanel.Controls.Add(this.chargingImageLeft);
+            this.mainPanel.Controls.Add(this.chargingImageRight);
+            this.mainPanel.Controls.Add(this.leftPodLabel);
+            this.mainPanel.Controls.Add(this.pictureBox1);
+            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainPanel.Location = new System.Drawing.Point(0, 0);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(798, 492);
+            this.mainPanel.TabIndex = 14;
+            // 
+            // updatingInfoToast
+            // 
+            this.updatingInfoToast.BackColor = System.Drawing.Color.White;
+            this.updatingInfoToast.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.updatingInfoToast.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.updatingInfoToast.Location = new System.Drawing.Point(176, 40);
+            this.updatingInfoToast.Name = "updatingInfoToast";
+            this.updatingInfoToast.Size = new System.Drawing.Size(511, 33);
+            this.updatingInfoToast.TabIndex = 17;
+            this.updatingInfoToast.Text = "Establishing Connection To Airpods";
+            this.updatingInfoToast.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.updatingInfoToast.Click += new System.EventHandler(this.updatingInfoToast_Click);
             // 
             // toolStripAbout
             // 
@@ -186,8 +326,8 @@
             // 
             this.toolStripFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testToolStripMenuItem,
-            this.test2ToolStripMenuItem});
+            this.updateAirpodsDataToolStripMenuItem,
+            this.testToolStripMenuItem});
             this.toolStripFile.Image = ((System.Drawing.Image)(resources.GetObject("toolStripFile.Image")));
             this.toolStripFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripFile.Name = "toolStripFile";
@@ -195,115 +335,55 @@
             this.toolStripFile.Text = "File";
             this.toolStripFile.ToolTipText = "toolStripFile";
             // 
+            // updateAirpodsDataToolStripMenuItem
+            // 
+            this.updateAirpodsDataToolStripMenuItem.Name = "updateAirpodsDataToolStripMenuItem";
+            this.updateAirpodsDataToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.updateAirpodsDataToolStripMenuItem.Text = "Update Airpods Data";
+            this.updateAirpodsDataToolStripMenuItem.Click += new System.EventHandler(this.updateAirpodsDataToolStripMenuItem_Click);
+            // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.testToolStripMenuItem.Text = "Test";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.testToolStripMenuItem.Text = "Restart Airpods Monitoring Service";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
-            // test2ToolStripMenuItem
+            // toolStrip1
             // 
-            this.test2ToolStripMenuItem.Name = "test2ToolStripMenuItem";
-            this.test2ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.test2ToolStripMenuItem.Text = "Test2";
-            // 
-            // backToMainViewButton
-            // 
-            this.backToMainViewButton.BackColor = System.Drawing.Color.White;
-            this.backToMainViewButton.Location = new System.Drawing.Point(0, 28);
-            this.backToMainViewButton.Name = "backToMainViewButton";
-            this.backToMainViewButton.Size = new System.Drawing.Size(64, 51);
-            this.backToMainViewButton.TabIndex = 12;
-            this.backToMainViewButton.Text = "Back";
-            this.backToMainViewButton.UseVisualStyleBackColor = false;
-            this.backToMainViewButton.Visible = false;
-            this.backToMainViewButton.Click += new System.EventHandler(this.backToMainViewButton_Click);
-            // 
-            // chargingImageCase
-            // 
-            this.chargingImageCase.BackColor = System.Drawing.Color.White;
-            this.chargingImageCase.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
-            this.chargingImageCase.Location = new System.Drawing.Point(491, 406);
-            this.chargingImageCase.Name = "chargingImageCase";
-            this.chargingImageCase.Size = new System.Drawing.Size(35, 28);
-            this.chargingImageCase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.chargingImageCase.TabIndex = 10;
-            this.chargingImageCase.TabStop = false;
-            this.chargingImageCase.Visible = false;
-            // 
-            // chargingImageLeft
-            // 
-            this.chargingImageLeft.BackColor = System.Drawing.Color.White;
-            this.chargingImageLeft.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
-            this.chargingImageLeft.Location = new System.Drawing.Point(309, 338);
-            this.chargingImageLeft.Name = "chargingImageLeft";
-            this.chargingImageLeft.Size = new System.Drawing.Size(35, 28);
-            this.chargingImageLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.chargingImageLeft.TabIndex = 9;
-            this.chargingImageLeft.TabStop = false;
-            this.chargingImageLeft.Visible = false;
-            // 
-            // chargingImageRight
-            // 
-            this.chargingImageRight.BackColor = System.Drawing.Color.White;
-            this.chargingImageRight.Image = global::AirpodsStartbarService.Properties.Resources.chargingbolt_small;
-            this.chargingImageRight.Location = new System.Drawing.Point(97, 338);
-            this.chargingImageRight.Name = "chargingImageRight";
-            this.chargingImageRight.Size = new System.Drawing.Size(35, 28);
-            this.chargingImageRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.chargingImageRight.TabIndex = 8;
-            this.chargingImageRight.TabStop = false;
-            this.chargingImageRight.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Image = global::AirpodsStartbarService.Properties.Resources.airpods_image_small;
-            this.pictureBox1.Location = new System.Drawing.Point(-8, -35);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(806, 533);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // aboutLabel
-            // 
-            this.aboutLabel.AutoSize = true;
-            this.aboutLabel.Location = new System.Drawing.Point(339, 66);
-            this.aboutLabel.Name = "aboutLabel";
-            this.aboutLabel.Size = new System.Drawing.Size(113, 13);
-            this.aboutLabel.TabIndex = 13;
-            this.aboutLabel.Text = "ABOUT TEST VALUE";
-            this.aboutLabel.Visible = false;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripAbout,
+            this.toolStripFile});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(798, 25);
+            this.toolStrip1.TabIndex = 11;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // serviceMainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 492);
-            this.Controls.Add(this.aboutLabel);
-            this.Controls.Add(this.backToMainViewButton);
+            this.Controls.Add(this.updatingInfoToast);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.chargingImageCase);
-            this.Controls.Add(this.chargingImageLeft);
-            this.Controls.Add(this.chargingImageRight);
-            this.Controls.Add(this.leftIndicator);
-            this.Controls.Add(this.rightIndicator);
-            this.Controls.Add(this.caseLabel);
-            this.Controls.Add(this.rightPodLabel);
-            this.Controls.Add(this.leftPodLabel);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.mainPanel);
             this.MaximumSize = new System.Drawing.Size(814, 531);
             this.MinimumSize = new System.Drawing.Size(814, 531);
             this.Name = "serviceMainWindow";
             this.Text = "Airpods Service";
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).EndInit();
+            this.aboutPanel.ResumeLayout(false);
+            this.aboutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.githubText)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
+            this.mainPanel.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageCase)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageLeft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chargingImageRight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,19 +399,25 @@
         private System.Windows.Forms.ToolStripMenuItem chargingCaseToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label leftPodLabel;
-        private System.Windows.Forms.Label rightPodLabel;
-        private System.Windows.Forms.Label caseLabel;
-        private System.Windows.Forms.Label rightIndicator;
-        private System.Windows.Forms.Label leftIndicator;
         private System.Windows.Forms.PictureBox chargingImageRight;
         private System.Windows.Forms.PictureBox chargingImageLeft;
+        private System.Windows.Forms.Label leftIndicator;
         private System.Windows.Forms.PictureBox chargingImageCase;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.Label rightPodLabel;
+        private System.Windows.Forms.Label rightIndicator;
+        private System.Windows.Forms.Label caseLabel;
+        private System.Windows.Forms.Panel aboutPanel;
+        private System.Windows.Forms.Label githubVisitText;
+        private System.Windows.Forms.PictureBox githubText;
+        private System.Windows.Forms.PictureBox githubLogo;
+        private System.Windows.Forms.Label aboutLabel;
+        private System.Windows.Forms.Button backToMainViewButton;
+        private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ToolStripLabel toolStripAbout;
         private System.Windows.Forms.ToolStripDropDownButton toolStripFile;
+        private System.Windows.Forms.ToolStripMenuItem updateAirpodsDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem test2ToolStripMenuItem;
-        private System.Windows.Forms.Button backToMainViewButton;
-        private System.Windows.Forms.Label aboutLabel;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.Label updatingInfoToast;
     }
 }
