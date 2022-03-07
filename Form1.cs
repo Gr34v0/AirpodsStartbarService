@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.ServiceProcess;
 using System.Security.Principal;
+using System.Collections.Generic;
+using InTheHand.Net.Sockets;
 
 namespace AirpodsStartbarService
 {
@@ -30,6 +32,7 @@ namespace AirpodsStartbarService
         private Timer updateTimer;
         private Timer restartServiceTimer;
         string serviceName = "airpods-service";
+        List<string> connectedDevices;
 
         public serviceMainWindow()
         {
@@ -40,6 +43,8 @@ namespace AirpodsStartbarService
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
 #endif
+            connectedDevices = new List<string>();
+
             aboutLabel.Text = AboutText();
 
             batteryService = new ServiceConsumer(serviceName);
@@ -55,6 +60,24 @@ namespace AirpodsStartbarService
             restartServiceTimer.Interval = 300000;
             restartServiceTimer.Tick += restartServiceEvent;
             restartServiceTimer.Start();
+
+            Task scanningService = Task.Factory.StartNew(() => 
+            {
+                while (true)
+                {
+                    List<string> tmpList = scanDevices();
+                    foreach (string device in tmpList)
+                    {
+                        if (!connectedDevices.Contains(device))
+                        {
+                            Console.WriteLine("Detected new device connection: " + device);
+                        }
+                    }
+
+                    connectedDevices = tmpList;
+                }
+            });
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -327,12 +350,28 @@ namespace AirpodsStartbarService
 
         private void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            scanDevices();
             batteryUpdate(true);
         }
 
         private void updatingInfoToast_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private List<string> scanDevices()
+        {
+            BluetoothClient client = new BluetoothClient();
+            List<string> items = new List<string>();
+            BluetoothDeviceInfo[] devices = client.DiscoverDevices();
+            foreach (BluetoothDeviceInfo d in devices)
+            {
+                if (d.Connected)
+                {
+                    items.Add(d.DeviceName);
+                }
+            }
+            return items;
         }
 
         private string AboutText()
