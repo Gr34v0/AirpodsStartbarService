@@ -338,10 +338,10 @@ namespace AirpodsStartbarService
         private string AboutText()
         {
             return
-                "I was extremely annoyed with not being able to simply view the battery life on my AirPods when I was using them with my Windows laptop.\r\n" +
-                "I don't have any Apple devices, but I love using my AirPods for meetings and music from my laptop.\r\n" +
-                "I have now solved this issue with help from ohandean's Airpods Windows Service, and made it open for anyone to use.\r\n" +
-                "Hopefully you find this useful - Holly"
+                "I was extremely annoyed with not being able to simply view the battery life on my AirPods when I was using them with my Windows laptop." +
+                "I don't have any Apple devices, but I love using my AirPods for meetings and music which can be frustrating due to the lack of integration.\r\n\r\n" +
+                "I have now solved this issue with help from ohandean's Airpods Windows Service, and made it open for anyone to use.\r\n\r\n" +
+                "Hopefully you find this useful\r\n\r\n - Holly G"
                 ;
             
         }

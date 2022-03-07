@@ -265,10 +265,10 @@
             // 
             // aboutLabel
             // 
-            this.aboutLabel.AutoSize = true;
-            this.aboutLabel.Location = new System.Drawing.Point(64, 104);
+            this.aboutLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aboutLabel.Location = new System.Drawing.Point(49, 101);
             this.aboutLabel.Name = "aboutLabel";
-            this.aboutLabel.Size = new System.Drawing.Size(113, 13);
+            this.aboutLabel.Size = new System.Drawing.Size(310, 306);
             this.aboutLabel.TabIndex = 13;
             this.aboutLabel.Text = "ABOUT TEST VALUE";
             // 
