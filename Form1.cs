@@ -33,9 +33,16 @@ namespace AirpodsStartbarService
         private Timer restartServiceTimer;
         string serviceName = "airpods-service";
         List<string> connectedDevices;
+        
 
         public serviceMainWindow()
         {
+            if (!IsAdmin())
+            {
+                MessageBox.Show("Airpods Startbar Service must be run in Administrator Mode");
+                Application.Exit();
+            }
+
             InitializeComponent();
 #if DEBUG
 
@@ -51,29 +58,51 @@ namespace AirpodsStartbarService
 
             restartService();
 
-            updateTimer = new Timer();
-            updateTimer.Interval = 30000;
-            updateTimer.Tick += batteryUpdateConsume;
-            updateTimer.Start();
-
-            restartServiceTimer = new Timer();
-            restartServiceTimer.Interval = 300000;
-            restartServiceTimer.Tick += restartServiceEvent;
-            restartServiceTimer.Start();
-
-            Task scanningService = Task.Factory.StartNew(() => 
+            Task scanningService = Task.Factory.StartNew(() =>
             {
+                updateTimer = new Timer();
+                updateTimer.Interval = 30000;
+                updateTimer.Tick += batteryUpdateConsume;
+
+                restartServiceTimer = new Timer();
+                restartServiceTimer.Interval = 300000;
+                restartServiceTimer.Tick += restartServiceEvent;
+
+                string activeDevicePrediction = "";
                 while (true)
                 {
-                    List<string> tmpList = scanDevices();
-                    foreach (string device in tmpList)
+                    List<string> tmpList = scanDevices().Result;
+                    if (!tmpList.Contains(activeDevicePrediction) && activeDevicePrediction != "")
                     {
-                        if (!connectedDevices.Contains(device))
+                        Console.WriteLine("Connected device has been disconnected: " + activeDevicePrediction);
+
+                        updateTimer.Stop();
+
+                        restartServiceTimer.Stop();
+
+                        activeDevicePrediction = "";
+
+                        batteryUpdate(false);
+                    }
+                    else 
+                    {
+                        foreach (string device in tmpList)
                         {
-                            Console.WriteLine("Detected new device connection: " + device);
+                            if (!connectedDevices.Contains(device))
+                            {
+                                Console.WriteLine("Detected new device connection: " + device);
+
+                                activeDevicePrediction = device;
+
+                                batteryUpdate(false);
+
+                                updateTimer.Start();
+
+                                restartServiceTimer.Start();
+                            }
                         }
                     }
-
+                    
                     connectedDevices = tmpList;
                 }
             });
@@ -359,19 +388,21 @@ namespace AirpodsStartbarService
 
         }
 
-        private List<string> scanDevices()
+        private Task<List<string>> scanDevices()
         {
-            BluetoothClient client = new BluetoothClient();
-            List<string> items = new List<string>();
-            BluetoothDeviceInfo[] devices = client.DiscoverDevices();
-            foreach (BluetoothDeviceInfo d in devices)
-            {
-                if (d.Connected)
+            return Task.Factory.StartNew(() => {
+                BluetoothClient client = new BluetoothClient();
+                List<string> items = new List<string>();
+                BluetoothDeviceInfo[] devices = client.DiscoverDevices();
+                foreach (BluetoothDeviceInfo d in devices)
                 {
-                    items.Add(d.DeviceName);
+                    if (d.Connected)
+                    {
+                        items.Add(d.DeviceName);
+                    }
                 }
-            }
-            return items;
+                return items;
+            });
         }
 
         private string AboutText()
