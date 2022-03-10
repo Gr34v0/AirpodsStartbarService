@@ -52,10 +52,10 @@ namespace AirpodsStartbarService
                 }
             }
 
-            InitializeComponent();
-#if DEBUG
+            startService();
 
-#else
+            InitializeComponent();
+#if !DEBUG
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
 #endif
@@ -64,9 +64,7 @@ namespace AirpodsStartbarService
             aboutLabel.Text = AboutText();
 
             batteryService = new ServiceConsumer(serviceName);
-
-            restartService();
-
+            
             Task scanningService = Task.Factory.StartNew(() =>
             {
                 updateTimer = new Timer();
@@ -160,6 +158,7 @@ namespace AirpodsStartbarService
             this.ShowInTaskbar = true;
             updateTimer.Stop();
             restartServiceTimer.Stop();
+            stopService();
             Application.Exit();
         }
 
