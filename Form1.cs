@@ -328,7 +328,7 @@ namespace AirpodsStartbarService
             Task task = Task.Factory.StartNew(() =>
             {
                 ServiceController service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Running)
+                if (service.Status != ServiceControllerStatus.Running && service.Status != ServiceControllerStatus.StartPending)
                 {
                     Console.WriteLine("Starting Service");
                     service.Start();
@@ -345,7 +345,7 @@ namespace AirpodsStartbarService
             Task task = Task.Factory.StartNew(() =>
             {
                 ServiceController service = new ServiceController(serviceName);
-                if (service.Status == ServiceControllerStatus.Running)
+                if (service.Status != ServiceControllerStatus.Stopped || service.Status != ServiceControllerStatus.StopPending)
                 {
                     Console.WriteLine("Stopping Service");
                     service.Stop();
