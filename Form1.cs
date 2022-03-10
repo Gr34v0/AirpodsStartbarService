@@ -39,8 +39,17 @@ namespace AirpodsStartbarService
         {
             if (!IsAdmin())
             {
-                MessageBox.Show("Airpods Startbar Service must be run in Administrator Mode");
-                Application.Exit();
+                if(MessageBox.Show("Airpods Startbar Service must be run in Administrator Mode") == DialogResult.OK)
+                {
+                    if (Application.MessageLoop)
+                    {
+                        Application.Exit();
+                    }
+                    else
+                    {
+                        Environment.Exit(1);
+                    }
+                }
             }
 
             InitializeComponent();
@@ -132,7 +141,7 @@ namespace AirpodsStartbarService
         {
             try
             {
-                notifyIcon1.Icon = new Icon(Path.GetFullPath(@"\images\Icon1.ico"));
+                notifyIcon1.Icon = new Icon(Path.GetFullPath(@"\images\airpods-image-icon.ico"));
             }
             catch (Exception ex)
             {
@@ -311,27 +320,42 @@ namespace AirpodsStartbarService
 
         private async void restartService()
         {
+            await stopService();
+            await startService();
+        }
+
+        private async Task<bool> startService()
+        {
             Task task = Task.Factory.StartNew(() =>
             {
-                Console.WriteLine("Restarting Service");
                 ServiceController service = new ServiceController(serviceName);
-                if (service.Status == ServiceControllerStatus.Running)
+                if (service.Status != ServiceControllerStatus.Running)
                 {
-                    service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                    Console.WriteLine("Starting Service");
+                    service.Start();
+                    service.WaitForStatus(ServiceControllerStatus.Running);
                 }
-                service.Start();
-                service.WaitForStatus(ServiceControllerStatus.Running);
-
-                MethodInvoker inv = delegate
-                {
-                    
-                };
-                this.Invoke(inv);
-                return;
             });
             await task;
             task.Dispose();
+            return true;
+        }
+
+        private async Task<bool> stopService()
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ServiceController service = new ServiceController(serviceName);
+                if (service.Status == ServiceControllerStatus.Running)
+                {
+                    Console.WriteLine("Stopping Service");
+                    service.Stop();
+                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+            });
+            await task;
+            task.Dispose();
+            return true;
         }
 
         private static bool IsAdmin()
