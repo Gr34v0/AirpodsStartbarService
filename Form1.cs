@@ -7,15 +7,13 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.ServiceProcess;
 using System.Security.Principal;
-using System.Collections.Generic;
-using InTheHand.Net.Sockets;
 
 namespace AirpodsStartbarService
 {
-    public partial class serviceMainWindow : Form
+    public partial class ServiceMainWindow : Form
     {
-        private ServiceConsumer batteryService;
-        private AirpodsData data = new AirpodsData()
+        internal ServiceConsumer batteryService;
+        internal AirpodsData data = new AirpodsData()
         {
             status = false,
             left = -1,
@@ -29,14 +27,14 @@ namespace AirpodsStartbarService
             model = "",
             rssi = 0
         };
-        private Timer updateTimer;
-        private Timer restartServiceTimer;
-        string serviceName = "airpods-service";
-        List<string> connectedDevices;
-        
 
-        public serviceMainWindow()
+        internal string serviceName;
+
+        internal ServiceMainWindow(ServiceConsumer batteryServiceImport)
         {
+
+            batteryService = batteryServiceImport;
+            serviceName = batteryService.pipeName;
             if (!IsAdmin())
             {
                 if(MessageBox.Show("Airpods Startbar Service must be run in Administrator Mode") == DialogResult.OK)
@@ -59,64 +57,13 @@ namespace AirpodsStartbarService
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
 #endif
-            connectedDevices = new List<string>();
+            
 
             aboutLabel.Text = AboutText();
 
-            batteryService = new ServiceConsumer(serviceName);
-            
-            Task scanningService = Task.Factory.StartNew(() =>
-            {
-                updateTimer = new Timer();
-                updateTimer.Interval = 30000;
-                updateTimer.Tick += batteryUpdateConsume;
-
-                restartServiceTimer = new Timer();
-                restartServiceTimer.Interval = 300000;
-                restartServiceTimer.Tick += restartServiceEvent;
-
-                string activeDevicePrediction = "";
-                while (true)
-                {
-                    List<string> tmpList = scanDevices().Result;
-                    if (!tmpList.Contains(activeDevicePrediction) && activeDevicePrediction != "")
-                    {
-                        Console.WriteLine("Connected device has been disconnected: " + activeDevicePrediction);
-
-                        updateTimer.Stop();
-
-                        restartServiceTimer.Stop();
-
-                        activeDevicePrediction = "";
-
-                        batteryUpdate(false);
-                    }
-                    else 
-                    {
-                        foreach (string device in tmpList)
-                        {
-                            if (!connectedDevices.Contains(device))
-                            {
-                                Console.WriteLine("Detected new device connection: " + device);
-
-                                activeDevicePrediction = device;
-
-                                batteryUpdate(false);
-
-                                updateTimer.Start();
-
-                                restartServiceTimer.Start();
-                            }
-                        }
-                    }
-                    
-                    connectedDevices = tmpList;
-                }
-            });
-
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        internal void Form1_Load(object sender, EventArgs e)
         {
             Displaynotify();
         }
@@ -146,34 +93,134 @@ namespace AirpodsStartbarService
             }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        internal void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
-            updateTimer.Stop();
-            restartServiceTimer.Stop();
+            batteryService.updateTimer.Stop();
+            batteryService.restartServiceTimer.Stop();
             stopService();
             Application.Exit();
         }
 
-        private void genericStripMenuItem_Click(object sender, EventArgs e)
+        internal void genericStripMenuItem_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
 
-        private void batteryUpdateConsume(object sender, EventArgs e)
+        internal void batteryUpdateConsume(object sender, EventArgs e)
         {
             batteryUpdate(false);
         }
 
-        private async void batteryUpdate(bool manual = true)
+
+        internal void restartServiceEvent(object sender, EventArgs e)
+        {
+            restartService();
+        }
+
+        internal async void restartService()
+        {
+            await stopService();
+            await startService();
+        }
+
+        internal async Task<bool> startService()
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ServiceController service = new ServiceController(serviceName);
+                if (service.Status != ServiceControllerStatus.Running && service.Status != ServiceControllerStatus.StartPending)
+                {
+                    Console.WriteLine("Starting Service");
+                    service.Start();
+                    service.WaitForStatus(ServiceControllerStatus.Running);
+                }
+            });
+            await task;
+            task.Dispose();
+            return true;
+        }
+
+        internal async Task<bool> stopService()
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ServiceController service = new ServiceController(serviceName);
+                if (service.Status != ServiceControllerStatus.Stopped || service.Status != ServiceControllerStatus.StopPending)
+                {
+                    Console.WriteLine("Stopping Service");
+                    service.Stop();
+                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+            });
+            await task;
+            task.Dispose();
+            return true;
+        }
+
+        internal static bool IsAdmin()
+        {
+            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        internal void toolStripAbout_Click(object sender, EventArgs e)
+        {
+            updatingInfoToast.BackColor = Color.Transparent;
+            aboutPanel.Show();
+        }
+
+        internal void backToMainViewButton_Click(object sender, EventArgs e)
+        {
+            updatingInfoToast.BackColor = Color.White;
+            aboutPanel.Hide();
+        }
+
+        internal void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            restartService();
+        }
+
+        internal void githubVisitText_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        internal void githubLogo_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        internal void githubText_Click(object sender, EventArgs e)
+        {
+            navigateToGithubLink();
+        }
+
+        internal void navigateToGithubLink()
+        {
+            System.Diagnostics.Process.Start("http://github.com/Gr34v0/AirpodsStartbarService");
+        }
+
+
+        internal void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            batteryService.scanDevices();
+            batteryUpdate(true);
+        }
+
+        internal void updatingInfoToast_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        internal async void batteryUpdate(bool manual = true)
         {
             if (manual)
             {
@@ -309,126 +356,12 @@ namespace AirpodsStartbarService
 
             await task;
             task.Dispose();
-           
-        }
-
-        private void restartServiceEvent(object sender, EventArgs e)
-        {
-            restartService();
-        }
-
-        private async void restartService()
-        {
-            await stopService();
-            await startService();
-        }
-
-        private async Task<bool> startService()
-        {
-            Task task = Task.Factory.StartNew(() =>
-            {
-                ServiceController service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Running && service.Status != ServiceControllerStatus.StartPending)
-                {
-                    Console.WriteLine("Starting Service");
-                    service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running);
-                }
-            });
-            await task;
-            task.Dispose();
-            return true;
-        }
-
-        private async Task<bool> stopService()
-        {
-            Task task = Task.Factory.StartNew(() =>
-            {
-                ServiceController service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Stopped || service.Status != ServiceControllerStatus.StopPending)
-                {
-                    Console.WriteLine("Stopping Service");
-                    service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped);
-                }
-            });
-            await task;
-            task.Dispose();
-            return true;
-        }
-
-        private static bool IsAdmin()
-        {
-            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        private void toolStripAbout_Click(object sender, EventArgs e)
-        {
-            updatingInfoToast.BackColor = Color.Transparent;
-            aboutPanel.Show();
-        }
-
-        private void backToMainViewButton_Click(object sender, EventArgs e)
-        {
-            updatingInfoToast.BackColor = Color.White;
-            aboutPanel.Hide();
-        }
-
-        private void testToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            restartService();
-        }
-
-        private void githubVisitText_Click(object sender, EventArgs e)
-        {
-            navigateToGithubLink();
-        }
-
-        private void githubLogo_Click(object sender, EventArgs e)
-        {
-            navigateToGithubLink();
-        }
-
-        private void githubText_Click(object sender, EventArgs e)
-        {
-            navigateToGithubLink();
-        }
-
-        private void navigateToGithubLink()
-        {
-            System.Diagnostics.Process.Start("http://github.com/Gr34v0/AirpodsStartbarService");
-        }
-
-
-        private void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            scanDevices();
-            batteryUpdate(true);
-        }
-
-        private void updatingInfoToast_Click(object sender, EventArgs e)
-        {
 
         }
 
-        private Task<List<string>> scanDevices()
-        {
-            return Task.Factory.StartNew(() => {
-                BluetoothClient client = new BluetoothClient();
-                List<string> items = new List<string>();
-                BluetoothDeviceInfo[] devices = client.DiscoverDevices();
-                foreach (BluetoothDeviceInfo d in devices)
-                {
-                    if (d.Connected)
-                    {
-                        items.Add(d.DeviceName);
-                    }
-                }
-                return items;
-            });
-        }
+        
 
-        private string AboutText()
+        internal string AboutText()
         {
             return
                 "I was extremely annoyed with not being able to simply view the battery life on my AirPods when I was using them with my Windows laptop." +

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AirpodsStartbarService
@@ -16,7 +13,10 @@ namespace AirpodsStartbarService
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new serviceMainWindow());
+            ServiceConsumer serviceConsumer = new ServiceConsumer();
+            ServiceMainWindow serviceMainWindow = new ServiceMainWindow(serviceConsumer);
+            Application.Run(serviceMainWindow);
+            serviceConsumer.StartBackend(serviceMainWindow);
         }
     }
 }
