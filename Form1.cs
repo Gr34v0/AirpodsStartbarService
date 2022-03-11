@@ -13,20 +13,7 @@ namespace AirpodsStartbarService
     public partial class ServiceMainWindow : Form
     {
         internal ServiceConsumer batteryService;
-        internal AirpodsData data = new AirpodsData()
-        {
-            status = false,
-            left = -1,
-            right = -1,
-            case1 = -1,
-            charging_left = false,
-            charging_right = false,
-            charging_case1 = false,
-            error = "",
-            addr = "",
-            model = "",
-            rssi = 0
-        };
+        
 
         internal string serviceName;
 
@@ -50,6 +37,7 @@ namespace AirpodsStartbarService
                 }
             }
 
+            
             InitializeComponent();
 #if !DEBUG
             this.WindowState = FormWindowState.Minimized;
@@ -59,6 +47,11 @@ namespace AirpodsStartbarService
 
             Task tsk = Task.Factory.StartNew(() => 
             {
+                while (!batteryService.serviceOnline)
+                {
+                    Thread.Sleep(500);
+                }
+
                 while (true)
                 {
                     if (batteryService.updateInfo != UpdateBatteryEnum.NoUpdate)
@@ -166,7 +159,6 @@ namespace AirpodsStartbarService
             System.Diagnostics.Process.Start("http://github.com/Gr34v0/AirpodsStartbarService");
         }
 
-
         internal void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             batteryService.scanDevices();
@@ -189,8 +181,8 @@ namespace AirpodsStartbarService
 
                     try
                     {
-                        data = JsonConvert.DeserializeObject<AirpodsData>(battVal);
-                        Console.WriteLine(data.ToString());
+                        batteryService.data = JsonConvert.DeserializeObject<AirpodsData>(battVal);
+                        Console.WriteLine(batteryService.data.ToString());
                     }
                     catch
                     {
@@ -203,31 +195,31 @@ namespace AirpodsStartbarService
 
                     string disconText = "-";
 
-                    if (data.left == -1)
+                    if (batteryService.data.left == -1)
                     {
                         leftVal = disconText;
                     }
                     else
                     {
-                        leftVal = data.left.ToString() + "%";
+                        leftVal = batteryService.data.left.ToString() + "%";
                     }
 
-                    if (data.right == -1)
+                    if (batteryService.data.right == -1)
                     {
                         rightVal = disconText;
                     }
                     else
                     {
-                        rightVal = data.right.ToString() + "%";
+                        rightVal = batteryService.data.right.ToString() + "%";
                     }
 
-                    if (data.case1 == -1)
+                    if (batteryService.data.case1 == -1)
                     {
                         caseVal = disconText;
                     }
                     else
                     {
-                        caseVal = data.case1.ToString() + "%";
+                        caseVal = batteryService.data.case1.ToString() + "%";
                     }
 
                     string displayTextLeft = String.Format("Left Ear Bud:     {0}", leftVal);
@@ -259,7 +251,7 @@ namespace AirpodsStartbarService
                         this.leftPodLabel.Update();
                         this.caseLabel.Update();
 
-                        if (data.charging_left)
+                        if (batteryService.data.charging_left)
                         {
                             this.chargingImageLeft.Show();
                         }
@@ -269,7 +261,7 @@ namespace AirpodsStartbarService
                         }
                         this.chargingImageLeft.Update();
 
-                        if (data.charging_right)
+                        if (batteryService.data.charging_right)
                         {
                             this.chargingImageRight.Show();
                         }
@@ -279,7 +271,7 @@ namespace AirpodsStartbarService
                         }
                         this.chargingImageRight.Update();
 
-                        if (data.charging_case1)
+                        if (batteryService.data.charging_case1)
                         {
                             this.chargingImageCase.Show();
                         }
@@ -302,6 +294,13 @@ namespace AirpodsStartbarService
                             updatingInfoToast.Visible = false;
                         }
 
+                        if(leftVal == disconText && rightVal == disconText && caseVal == disconText)
+                        {
+                            updatingInfoToast.Text = "Establishing Connection To Airpods";
+                        }
+
+                        updatingInfoToast.Update();
+
                     };
 
                     this.Invoke(inv);
@@ -311,7 +310,6 @@ namespace AirpodsStartbarService
 
             await task;
             task.Dispose();
-
         }
 
         internal string AboutText()
@@ -322,7 +320,6 @@ namespace AirpodsStartbarService
                 "I have now solved this issue with help from ohandean's Airpods Windows Service, and made it open for anyone to use.\r\n\r\n" +
                 "Hopefully you find this useful\r\n\r\n - Holly G"
                 ;
-            
         }
     }
 }

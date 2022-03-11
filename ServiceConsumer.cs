@@ -14,8 +14,8 @@ namespace AirpodsStartbarService
     {
         private string _pipeName = "airpods-service";
         private bool _deviceDetected;
-        //public ServiceMainWindow activeForm;
         public UpdateBatteryEnum updateInfo = UpdateBatteryEnum.NoUpdate;
+        public bool serviceOnline = false;
 
         List<string> connectedDevices;
         public bool deviceDetected
@@ -44,6 +44,8 @@ namespace AirpodsStartbarService
 
         public Timer updateTimer;
         public Timer restartServiceTimer;
+
+        internal AirpodsData data = new AirpodsData();
 
         public ServiceConsumer()
         {
@@ -75,7 +77,7 @@ namespace AirpodsStartbarService
                     {
                         foreach (string device in tmpList)
                         {
-                            if (!connectedDevices.Contains(device))
+                            if (!connectedDevices.Contains(device) && device.ToLower().Contains("airpods"))
                             {
                                 Console.WriteLine("Detected new device connection: " + device);
 
@@ -107,6 +109,7 @@ namespace AirpodsStartbarService
             AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
             restartService();
             autoEvent.Set();
+            updateInfo = UpdateBatteryEnum.AutoUpdate;
         }
 
         internal Timer makeUpdateTimer()
@@ -202,12 +205,15 @@ namespace AirpodsStartbarService
                         Console.WriteLine("Starting Service");
                         service.Start();
                         service.WaitForStatus(ServiceControllerStatus.Running);
+                        Console.Write("Service Started");
+                        
                     }
                     catch (InvalidOperationException ioe)
                     {
                         Console.WriteLine("Service could not be started as it is in the following state: " + service.Status);
                     }
                 }
+                serviceOnline = true;
             });
             await task;
             task.Dispose();
@@ -226,12 +232,17 @@ namespace AirpodsStartbarService
                         Console.WriteLine("Stopping Service");
                         service.Stop();
                         service.WaitForStatus(ServiceControllerStatus.Stopped);
+                        Console.WriteLine("Service Stopped");
+                        
                     }
                     catch (InvalidOperationException ioe)
                     {
                         Console.WriteLine("Service could not be stopped as it is in the following state: " + service.Status);
                     }
+                    data = new AirpodsData();
+                    updateInfo = UpdateBatteryEnum.AutoUpdate;
                 }
+                serviceOnline = false;
             });
             await task;
             task.Dispose();

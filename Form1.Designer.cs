@@ -152,6 +152,7 @@
             this.chargingImageRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.chargingImageRight.TabIndex = 8;
             this.chargingImageRight.TabStop = false;
+            this.chargingImageRight.Visible = false;
             // 
             // chargingImageLeft
             // 
@@ -163,6 +164,7 @@
             this.chargingImageLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.chargingImageLeft.TabIndex = 9;
             this.chargingImageLeft.TabStop = false;
+            this.chargingImageLeft.Visible = false;
             // 
             // leftIndicator
             // 
@@ -184,6 +186,7 @@
             this.chargingImageCase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.chargingImageCase.TabIndex = 10;
             this.chargingImageCase.TabStop = false;
+            this.chargingImageCase.Visible = false;
             // 
             // rightPodLabel
             // 
@@ -285,7 +288,6 @@
             // 
             // mainPanel
             // 
-            this.mainPanel.Controls.Add(this.aboutPanel);
             this.mainPanel.Controls.Add(this.caseLabel);
             this.mainPanel.Controls.Add(this.rightIndicator);
             this.mainPanel.Controls.Add(this.rightPodLabel);
@@ -295,6 +297,7 @@
             this.mainPanel.Controls.Add(this.chargingImageRight);
             this.mainPanel.Controls.Add(this.leftPodLabel);
             this.mainPanel.Controls.Add(this.pictureBox1);
+            this.mainPanel.Controls.Add(this.aboutPanel);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 0);
             this.mainPanel.Name = "mainPanel";
@@ -359,7 +362,7 @@
             this.toolStrip1.TabIndex = 11;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // serviceMainWindow
+            // ServiceMainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -369,7 +372,7 @@
             this.Controls.Add(this.mainPanel);
             this.MaximumSize = new System.Drawing.Size(814, 531);
             this.MinimumSize = new System.Drawing.Size(814, 531);
-            this.Name = "serviceMainWindow";
+            this.Name = "ServiceMainWindow";
             this.Text = "Airpods Service";
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
