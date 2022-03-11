@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using InTheHand.Net.Sockets;
 using System.IO.Pipes;
+using System.ServiceProcess;
 
 
 namespace AirpodsStartbarService
@@ -12,8 +13,21 @@ namespace AirpodsStartbarService
     internal class ServiceConsumer
     {
         private string _pipeName = "airpods-service";
+        private bool _deviceDetected;
+        public ServiceMainWindow activeForm;
 
         List<string> connectedDevices;
+        public bool deviceDetected
+        {
+            get
+            {
+                return _deviceDetected;
+            }
+            private set
+            {
+                _deviceDetected = deviceDetected;
+            }
+        }
 
         public string pipeName
         {
@@ -21,7 +35,7 @@ namespace AirpodsStartbarService
             {
                 return _pipeName;
             }
-            set
+            private set
             {
                 _pipeName = value;
             }
@@ -33,32 +47,23 @@ namespace AirpodsStartbarService
         public ServiceConsumer()
         {
             connectedDevices = new List<string>();
+            deviceDetected = false;
         }
 
-        public void StartBackend(ServiceMainWindow activeForm)
+        public void StartBackend()
         {
-            
-            Task scanningService = Task.Factory.StartNew(() =>
+            Task scanningService = Task.Factory.StartNew(async () =>
             {
-                updateTimer = new Timer();
-                updateTimer.Interval = 30000;
-                updateTimer.Tick += activeForm.batteryUpdateConsume;
-
-                restartServiceTimer = new Timer();
-                restartServiceTimer.Interval = 300000;
-                restartServiceTimer.Tick += activeForm.restartServiceEvent;
-
                 string activeDevicePrediction = "";
                 while (true)
                 {
-                    List<string> tmpList = scanDevices().Result;
+                    List<string> tmpList = await scanDevices();
                     if (!tmpList.Contains(activeDevicePrediction) && activeDevicePrediction != "")
                     {
                         Console.WriteLine("Connected device has been disconnected: " + activeDevicePrediction);
 
-                        updateTimer.Stop();
-
-                        restartServiceTimer.Stop();
+                        updateTimer.Dispose();
+                        restartServiceTimer.Dispose();
 
                         activeDevicePrediction = "";
 
@@ -76,9 +81,9 @@ namespace AirpodsStartbarService
 
                                 activeForm.batteryUpdate(false);
 
-                                updateTimer.Start();
-
-                                restartServiceTimer.Start();
+                                updateTimer = makeUpdateTimer();
+                                restartServiceTimer = makeRestartTimer();
+                                break;
                             }
                         }
                     }
@@ -86,6 +91,30 @@ namespace AirpodsStartbarService
                     connectedDevices = tmpList;
                 }
             });
+        }
+
+        internal void batteryUpdateConsume(Object stateInfo)
+        {
+            AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
+            activeForm.batteryUpdate(false);
+            autoEvent.Set();
+        }
+
+        internal void restartServiceEvent(Object stateInfo)
+        {
+            AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
+            restartService();
+            autoEvent.Set();
+        }
+
+        internal Timer makeUpdateTimer()
+        {
+            return new Timer(batteryUpdateConsume, new AutoResetEvent(true), 1000, 30000);
+        }
+
+        internal Timer makeRestartTimer()
+        {
+            return new Timer(restartServiceEvent, new AutoResetEvent(true), 1000, 300000);
         }
 
         internal Task<List<string>> scanDevices()
@@ -152,5 +181,60 @@ namespace AirpodsStartbarService
             }
   
         }
+
+        internal async void restartService()
+        {
+            await stopService();
+            await startService();
+        }
+
+        internal async Task<bool> startService()
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ServiceController service = new ServiceController(pipeName);
+                if (service.Status != ServiceControllerStatus.Running && service.Status != ServiceControllerStatus.StartPending)
+                {
+                    try
+                    {
+                        Console.WriteLine("Starting Service");
+                        service.Start();
+                        service.WaitForStatus(ServiceControllerStatus.Running);
+                    }
+                    catch (InvalidOperationException ioe)
+                    {
+                        Console.WriteLine("Service could not be started as it is in the following state: " + service.Status);
+                    }
+                }
+            });
+            await task;
+            task.Dispose();
+            return true;
+        }
+
+        internal async Task<bool> stopService()
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                ServiceController service = new ServiceController(pipeName);
+                if (service.Status != ServiceControllerStatus.Stopped || service.Status != ServiceControllerStatus.StopPending)
+                {
+                    try
+                    {
+                        Console.WriteLine("Stopping Service");
+                        service.Stop();
+                        service.WaitForStatus(ServiceControllerStatus.Stopped);
+                    }
+                    catch (InvalidOperationException ioe)
+                    {
+                        Console.WriteLine("Service could not be stopped as it is in the following state: " + service.Status);
+                    }
+                }
+            });
+            await task;
+            task.Dispose();
+            return true;
+        }
+
     }
 }

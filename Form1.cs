@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using System.ServiceProcess;
 using System.Security.Principal;
 
 namespace AirpodsStartbarService
@@ -32,9 +31,9 @@ namespace AirpodsStartbarService
 
         internal ServiceMainWindow(ServiceConsumer batteryServiceImport)
         {
-
             batteryService = batteryServiceImport;
             serviceName = batteryService.pipeName;
+
             if (!IsAdmin())
             {
                 if(MessageBox.Show("Airpods Startbar Service must be run in Administrator Mode") == DialogResult.OK)
@@ -50,16 +49,15 @@ namespace AirpodsStartbarService
                 }
             }
 
-            startService();
+            batteryService.startService();
 
             InitializeComponent();
 #if !DEBUG
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
 #endif
-            
-
             aboutLabel.Text = AboutText();
+
 
         }
 
@@ -103,9 +101,9 @@ namespace AirpodsStartbarService
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
-            batteryService.updateTimer.Stop();
-            batteryService.restartServiceTimer.Stop();
-            stopService();
+            batteryService.updateTimer.Dispose();
+            batteryService.restartServiceTimer.Dispose();
+            batteryService.stopService();
             Application.Exit();
         }
 
@@ -113,57 +111,6 @@ namespace AirpodsStartbarService
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
-        }
-
-        internal void batteryUpdateConsume(object sender, EventArgs e)
-        {
-            batteryUpdate(false);
-        }
-
-
-        internal void restartServiceEvent(object sender, EventArgs e)
-        {
-            restartService();
-        }
-
-        internal async void restartService()
-        {
-            await stopService();
-            await startService();
-        }
-
-        internal async Task<bool> startService()
-        {
-            Task task = Task.Factory.StartNew(() =>
-            {
-                ServiceController service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Running && service.Status != ServiceControllerStatus.StartPending)
-                {
-                    Console.WriteLine("Starting Service");
-                    service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running);
-                }
-            });
-            await task;
-            task.Dispose();
-            return true;
-        }
-
-        internal async Task<bool> stopService()
-        {
-            Task task = Task.Factory.StartNew(() =>
-            {
-                ServiceController service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Stopped || service.Status != ServiceControllerStatus.StopPending)
-                {
-                    Console.WriteLine("Stopping Service");
-                    service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped);
-                }
-            });
-            await task;
-            task.Dispose();
-            return true;
         }
 
         internal static bool IsAdmin()
@@ -185,7 +132,7 @@ namespace AirpodsStartbarService
 
         internal void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            restartService();
+            batteryService.restartService();
         }
 
         internal void githubVisitText_Click(object sender, EventArgs e)
@@ -281,6 +228,8 @@ namespace AirpodsStartbarService
                     string displayTextRight = String.Format("Right Ear Bud:    {0}", rightVal);
                     string displayTextCase = String.Format("Charging Case:    {0}", caseVal);
 
+                    DateTime nowTime = DateTime.Now;
+                    Console.WriteLine(nowTime.Minute + ":" + nowTime.Second);
                     Console.WriteLine(displayTextLeft);
                     Console.WriteLine(displayTextRight);
                     Console.WriteLine(displayTextCase);
