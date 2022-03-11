@@ -14,7 +14,8 @@ namespace AirpodsStartbarService
     {
         private string _pipeName = "airpods-service";
         private bool _deviceDetected;
-        public ServiceMainWindow activeForm;
+        //public ServiceMainWindow activeForm;
+        public UpdateBatteryEnum updateInfo = UpdateBatteryEnum.NoUpdate;
 
         List<string> connectedDevices;
         public bool deviceDetected
@@ -67,7 +68,7 @@ namespace AirpodsStartbarService
 
                         activeDevicePrediction = "";
 
-                        activeForm.batteryUpdate(false);
+                        updateInfo = UpdateBatteryEnum.AutoUpdate;
                     }
                     else
                     {
@@ -79,7 +80,7 @@ namespace AirpodsStartbarService
 
                                 activeDevicePrediction = device;
 
-                                activeForm.batteryUpdate(false);
+                                updateInfo = UpdateBatteryEnum.AutoUpdate;
 
                                 updateTimer = makeUpdateTimer();
                                 restartServiceTimer = makeRestartTimer();
@@ -96,7 +97,7 @@ namespace AirpodsStartbarService
         internal void batteryUpdateConsume(Object stateInfo)
         {
             AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
-            activeForm.batteryUpdate(false);
+            updateInfo = UpdateBatteryEnum.AutoUpdate;
             autoEvent.Set();
         }
 

@@ -58,6 +58,17 @@ namespace AirpodsStartbarService
 #endif
             aboutLabel.Text = AboutText();
 
+            Task tsk = Task.Factory.StartNew(() => 
+            {
+                while (true)
+                {
+                    if (batteryService.updateInfo != UpdateBatteryEnum.NoUpdate)
+                    {
+                        batteryUpdate(false);
+                        batteryService.updateInfo = UpdateBatteryEnum.NoUpdate;
+                    }
+                }
+            });
 
         }
 
@@ -159,12 +170,7 @@ namespace AirpodsStartbarService
         internal void updateAirpodsDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             batteryService.scanDevices();
-            batteryUpdate(true);
-        }
-
-        internal void updatingInfoToast_Click(object sender, EventArgs e)
-        {
-
+            batteryService.updateInfo = UpdateBatteryEnum.ManualUpdate;
         }
 
         internal async void batteryUpdate(bool manual = true)
@@ -307,8 +313,6 @@ namespace AirpodsStartbarService
             task.Dispose();
 
         }
-
-        
 
         internal string AboutText()
         {

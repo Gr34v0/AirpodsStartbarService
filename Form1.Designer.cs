@@ -312,7 +312,6 @@
             this.updatingInfoToast.TabIndex = 17;
             this.updatingInfoToast.Text = "Establishing Connection To Airpods";
             this.updatingInfoToast.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.updatingInfoToast.Click += new System.EventHandler(this.updatingInfoToast_Click);
             // 
             // toolStripAbout
             // 
