@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -65,6 +66,7 @@ namespace AirpodsStartbarService
                         batteryUpdate(false);
                         batteryService.updateInfo = UpdateBatteryEnum.NoUpdate;
                     }
+                    Thread.Sleep(500);
                 }
             });
 
@@ -290,7 +292,7 @@ namespace AirpodsStartbarService
                         if (manual)
                         {
                             updatingInfoToast.Text = "Battery Info Updated";
-                            Timer toastTimer = new Timer();
+                            System.Windows.Forms.Timer toastTimer = new System.Windows.Forms.Timer();
                             toastTimer.Interval = 5000;
                             toastTimer.Tick += (sender, args) => { updatingInfoToast.Visible = false; toastTimer.Stop(); toastTimer.Dispose(); };
                             toastTimer.Start();
