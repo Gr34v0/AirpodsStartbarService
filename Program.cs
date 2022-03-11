@@ -15,7 +15,6 @@ namespace AirpodsStartbarService
             Application.SetCompatibleTextRenderingDefault(false);
             ServiceConsumer serviceConsumer = new ServiceConsumer();
             ServiceMainWindow serviceMainWindow = new ServiceMainWindow(serviceConsumer);
-            //serviceConsumer.activeForm = serviceMainWindow;
             serviceConsumer.StartBackend();
             Application.Run(serviceMainWindow);
         }

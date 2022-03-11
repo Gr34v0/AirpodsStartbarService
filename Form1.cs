@@ -49,8 +49,6 @@ namespace AirpodsStartbarService
                 }
             }
 
-            batteryService.startService();
-
             InitializeComponent();
 #if !DEBUG
             this.WindowState = FormWindowState.Minimized;

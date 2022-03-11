@@ -69,6 +69,7 @@ namespace AirpodsStartbarService
                         activeDevicePrediction = "";
 
                         updateInfo = UpdateBatteryEnum.AutoUpdate;
+                        await stopService();
                     }
                     else
                     {
